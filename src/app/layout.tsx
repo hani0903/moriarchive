@@ -36,12 +36,6 @@ export default async function Layout({ children }: { children: React.ReactNode }
                     </a>
                     <AppShell categories={categories}>
                         <main id="main" className="site-main" tabIndex={-1}>
-                            {process.env.MORI_DEMO === '1' && (
-                                <p className="demo-notice" role="status">
-                                    기능 확인용 데모입니다. 테스트 글을 표시하며 실제 작성한 글은 변경하지
-                                    않습니다.
-                                </p>
-                            )}
                             {children}
                         </main>
                         <footer className="site-footer">
