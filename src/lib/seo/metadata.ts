@@ -53,9 +53,21 @@ export function pageMetadata(title: string, description: string, pathname: strin
             siteName: profile.name,
             locale: 'ko_KR',
             type: 'website',
-            images: [{ url: `${getSiteOrigin()}/og.png`, width: 1200, height: 630, alt: profile.name }],
+            images: [
+                {
+                    url: `${getSiteOrigin()}/images/default-thumbnail.png`,
+                    width: 1672,
+                    height: 941,
+                    alt: profile.name,
+                },
+            ],
         },
-        twitter: { card: 'summary_large_image', title, description, images: [`${getSiteOrigin()}/og.png`] },
+        twitter: {
+            card: 'summary_large_image',
+            title,
+            description,
+            images: [`${getSiteOrigin()}/images/default-thumbnail.png`],
+        },
     };
 }
 
