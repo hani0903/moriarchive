@@ -1,0 +1,11 @@
+.local-docs
+.agents/
+AGENTS.md
+CLAUDE.md
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+.env*
+!.env.example
+coverage/

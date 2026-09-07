@@ -1,0 +1,1143 @@
+@import 'tailwindcss';
+@source "../";
+
+/* Design tokens. Values and their roles are documented in the repo root DESIGN.md.
+   Change a color here only together with the contrast table in DESIGN.md section 2. */
+@theme {
+    /* Neutral ramp. Each step has a fixed role in light and in dark, so switching
+       themes swaps steps instead of inventing new colors. See DESIGN.md. */
+    --color-gray-50: #fcfcfc;
+    --color-gray-100: #f6f6f6;
+    --color-gray-200: #ededed;
+    --color-gray-300: #e0e0e0;
+    --color-gray-400: #c4c4c4;
+    --color-gray-500: #8e8e8e;
+    --color-gray-600: #707070;
+    --color-gray-700: #616161;
+    --color-gray-800: #2e2e2e;
+    --color-gray-900: #1f1f1f;
+    --color-gray-950: #141414;
+
+    /* Acorn brown. moriarchive = a forest archive; one post is one acorn. */
+    --color-primary-50: #fff8f1;
+    --color-primary-100: #fceedf;
+    --color-primary-200: #f5d8bc;
+    --color-primary-300: #eab98c;
+    --color-primary-400: #db9f6b;
+    --color-primary-500: #c98550;
+    --color-primary-600: #ac6739;
+    --color-primary-700: #894c2d;
+    --color-primary-800: #703e2a;
+    --color-primary-900: #5d3527;
+    --color-primary-950: #321a12;
+
+    --font-sans:
+        'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, 'Segoe UI',
+        'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', monospace;
+
+    --text-display: 2.5rem;
+    --text-title: 2rem;
+    --text-title-mobile: 1.75rem;
+    --text-h2: 1.5rem;
+    --text-h3: 1.125rem;
+    --text-card-title: 1.125rem;
+    --text-body: 1rem;
+    --text-ui: 0.875rem;
+    --text-meta: 0.875rem;
+    --text-caption: 0.75rem;
+    --text-code: 0.875rem;
+
+    --leading-display: 1.25;
+    --leading-title: 1.35;
+    --leading-title-mobile: 1.4;
+    --leading-h2: 1.5;
+    --leading-h3: 1.6;
+    --leading-card-title: 1.45;
+    --leading-body: 1.8;
+    --leading-ui: 1.5;
+    --leading-meta: 1.6;
+    --leading-caption: 1.4;
+    --leading-code: 1.7;
+
+    /* Same values as Tailwind's default 4px scale, but declared so component CSS
+       below can reference var(--spacing-N) directly. */
+    --spacing-1: 4px;
+    --spacing-2: 8px;
+    --spacing-3: 12px;
+    --spacing-4: 16px;
+    --spacing-5: 20px;
+    --spacing-6: 24px;
+    --spacing-8: 32px;
+    --spacing-10: 40px;
+    --spacing-12: 48px;
+    --spacing-16: 64px;
+
+    --radius-inline: 4px;
+    --radius-control: 6px;
+    --radius-surface: 8px;
+    --radius-card: 10px;
+    --radius-pill: 9999px;
+
+    --shadow-card: 0 1px 2px rgb(0 0 0 / 0.05);
+    --shadow-overlay: 0 4px 12px rgb(0 0 0 / 0.12);
+}
+
+/* Semantic roles. Components reference these, never the raw ramp steps.
+   Only this block changes between themes. */
+:root {
+    color-scheme: light;
+
+    --bg: var(--color-gray-50); /* page */
+    --surface: #ffffff; /* cards, article surface */
+    --panel: var(--color-gray-100); /* toc, code, tags */
+    --hover-surface: var(--color-gray-200);
+
+    --line: var(--color-gray-300); /* decorative dividers */
+    --line-strong: var(--color-gray-500); /* control borders, needs 3:1 */
+
+    /* Three text tiers only. No disabled tier until a real disabled control exists. */
+    --text-primary: var(--color-gray-900); /* 16.07 on --bg */
+    --text-secondary: var(--color-gray-700); /* 6.04 */
+    --text-tertiary: var(--color-gray-600); /* 4.83 */
+
+    --accent: var(--color-primary-700); /* 6.53 */
+    --accent-hover: var(--color-primary-800); /* 8.49 */
+    --accent-surface: var(--color-primary-50);
+    --accent-surface-fg: var(--color-primary-800);
+
+    --scrollbar-thumb: var(--color-gray-400);
+    --scrollbar-thumb-hover: var(--color-gray-500);
+
+    --site-header-height: 69px;
+    --shell-max: 1080px;
+    --sidebar-width: 260px;
+    --sidebar-offset: 0px; /* how far the content column is pushed */
+    --article-max: 860px;
+    --toc-width: 220px;
+    --column-gap: var(--spacing-10);
+    --focus-width: 3px;
+    --focus-offset: 4px;
+    --duration: 150ms;
+    --duration-slow: 220ms;
+    --easing: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dark {
+    color-scheme: dark;
+
+    --bg: var(--color-gray-950);
+    --surface: var(--color-gray-900);
+    --panel: var(--color-gray-900);
+    --hover-surface: var(--color-gray-800);
+
+    --line: var(--color-gray-800);
+    --line-strong: var(--color-gray-600); /* 3.72 on --bg */
+
+    --text-primary: var(--color-gray-50); /* 17.96 on --bg */
+    --text-secondary: var(--color-gray-300); /* 13.96 */
+    --text-tertiary: var(--color-gray-400); /* 10.56 */
+
+    --accent: var(--color-primary-300); /* 10.37 */
+    --accent-hover: var(--color-primary-200); /* 13.54 */
+    --accent-surface: #2e2418;
+    --accent-surface-fg: var(--color-primary-200);
+
+    --scrollbar-thumb: var(--color-gray-600);
+    --scrollbar-thumb-hover: var(--color-gray-500);
+}
+
+* {
+    box-sizing: border-box;
+}
+html {
+    scroll-behavior: smooth;
+    /* The header is fixed, so every scroll target — toc anchors, browser find,
+       and Next's own scrollIntoView fallback on navigation — must clear it.
+       Next reads this value too (getScrollPaddingTop in layout-router). */
+    scroll-padding-top: calc(var(--site-header-height) + var(--spacing-4));
+}
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: var(--leading-body);
+    overflow-wrap: anywhere;
+}
+
+/* Scrollbars follow the theme. `color-scheme` above already themes the native
+   ones; these only make the thumb quieter. The thumb stays neutral on purpose —
+   an accent-colored scrollbar competes with body links. */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) transparent;
+}
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: var(--radius-pill);
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+    background-clip: content-box;
+}
+::-webkit-scrollbar-corner {
+    background: transparent;
+}
+
+/* Text roles */
+.text-secondary {
+    color: var(--text-secondary);
+}
+.text-tertiary {
+    color: var(--text-tertiary);
+}
+.text-accent {
+    color: var(--accent);
+}
+.meta {
+    color: var(--text-secondary);
+    font-size: var(--text-meta);
+    line-height: var(--leading-meta);
+}
+
+/* Navigation links stay neutral and move to accent on interaction.
+   Body links inside .prose are accent from the start. */
+.text-link {
+    color: inherit;
+    text-underline-offset: 4px;
+    transition:
+        color var(--duration) var(--easing),
+        background-color var(--duration) var(--easing);
+}
+.text-link:hover,
+.text-link:focus-visible {
+    color: var(--accent);
+    text-decoration-thickness: 2px;
+}
+.nav-link,
+.menu-link {
+    text-decoration: none;
+}
+.nav-link:hover,
+.nav-link:focus-visible,
+.menu-link:hover,
+.menu-link:focus-visible {
+    text-decoration: underline;
+}
+.plain-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.footer-copy {
+    color: var(--text-secondary);
+    font-size: var(--text-meta);
+    line-height: var(--leading-meta);
+    margin: 0 0 var(--spacing-3);
+}
+
+.button {
+    color: inherit;
+    background: var(--panel);
+    border: 1px solid var(--line-strong);
+    padding: var(--spacing-2) var(--spacing-3);
+    cursor: pointer;
+    border-radius: var(--radius-control);
+    font: inherit;
+    transition:
+        color var(--duration) var(--easing),
+        background-color var(--duration) var(--easing),
+        border-color var(--duration) var(--easing);
+}
+.button:hover {
+    background: var(--hover-surface);
+}
+.icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    padding: var(--spacing-3);
+    border: 0;
+    background: transparent;
+    color: inherit;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    transition: background-color var(--duration) var(--easing);
+}
+.icon-button:hover {
+    background: var(--hover-surface);
+}
+:focus-visible {
+    outline: var(--focus-width) solid var(--accent);
+    outline-offset: var(--focus-offset);
+}
+
+/* Left sidebar pushes the content column by --sidebar-offset. Below the overlay
+   breakpoint the offset stays 0 and the sidebar floats over the page instead. */
+.shell[data-sidebar='open'] {
+    --sidebar-offset: var(--sidebar-width);
+}
+.shell-content {
+    /* Container for the toc query: the toc floats outside .site-main, so the
+       decision depends on the whole content column, not on main's box. */
+    container: shell / inline-size;
+    margin-left: var(--sidebar-offset);
+    transition: margin-left var(--duration-slow) var(--easing);
+}
+.sidebar {
+    position: fixed;
+    top: var(--site-header-height);
+    left: 0;
+    bottom: 0;
+    z-index: 15;
+    width: var(--sidebar-width);
+    padding: var(--spacing-6) var(--spacing-5);
+    background: var(--bg);
+    border-right: 1px solid var(--line);
+    /* Its own scroll: nested in the 69px header, long category lists were unreachable. */
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    /* Always rendered so it can slide; `inert` keeps the closed panel out of the
+       focus order and the accessibility tree. */
+    transform: translateX(-100%);
+    transition: transform var(--duration-slow) var(--easing);
+}
+.shell[data-sidebar='open'] .sidebar {
+    transform: none;
+}
+.sidebar-title {
+    margin: 0 0 var(--spacing-2);
+    color: var(--text-secondary);
+    font-size: var(--text-ui);
+    line-height: var(--leading-ui);
+    font-weight: 600;
+}
+.sidebar-title + .sidebar-list {
+    margin-bottom: var(--spacing-8);
+}
+.sidebar-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-1);
+}
+.sidebar-sublist {
+    margin-top: var(--spacing-1);
+    padding-left: var(--spacing-3);
+    border-left: 1px solid var(--line);
+}
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-2);
+    padding: var(--spacing-2) var(--spacing-3);
+    border-radius: var(--radius-control);
+    color: var(--text-secondary);
+    font-size: var(--text-meta);
+    line-height: var(--leading-meta);
+    text-decoration: none;
+    transition:
+        color var(--duration) var(--easing),
+        background-color var(--duration) var(--easing);
+}
+.sidebar-link:hover,
+.sidebar-link:focus-visible {
+    background: var(--hover-surface);
+    color: var(--text-primary);
+}
+.sidebar-link[aria-current='page'] {
+    background: var(--accent-surface);
+    color: var(--accent-surface-fg);
+    font-weight: 700;
+}
+.sidebar-count {
+    color: var(--text-tertiary);
+    font-size: var(--text-caption);
+    font-variant-numeric: tabular-nums;
+}
+.sidebar-link[aria-current='page'] .sidebar-count {
+    color: inherit;
+}
+/* Inert until the overlay breakpoint, where the sidebar covers the content. */
+.sidebar-scrim {
+    display: none;
+}
+.shell[data-sidebar='closed'] .sidebar-scrim {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.site-header,
+.site-footer {
+    border-block-end: 1px solid var(--line);
+    /* Same inner gutter as .site-main, so the brand lines up with the page title
+       instead of sitting 20px to its left. */
+    padding-inline: max(var(--spacing-5), calc((100% - var(--shell-max)) / 2 + var(--spacing-5)));
+    box-sizing: border-box;
+}
+.site-header {
+    height: var(--site-header-height);
+    width: 100%;
+    padding-block: var(--spacing-4);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 20;
+    background: var(--bg);
+}
+.site-footer {
+    border-block-start: 1px solid var(--line);
+    margin-top: var(--spacing-16);
+    padding-block: var(--spacing-4);
+}
+.header-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-4);
+    align-items: center;
+}
+.header-start,
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-4);
+}
+.header-actions {
+    margin-left: auto;
+}
+.menu-button {
+    order: 1;
+    margin-left: calc(var(--spacing-3) * -1); /* optical: pull the icon to the gutter */
+}
+.brand {
+    order: 2;
+    font-weight: 700;
+    text-decoration: none;
+}
+.primary-nav {
+    order: 1;
+    display: flex;
+    gap: var(--spacing-6);
+    align-items: center;
+}
+.theme-toggle {
+    order: 2;
+}
+/* Scoped: an unscoped [aria-current] selector also hits breadcrumbs and the toc. */
+.primary-nav [aria-current='page'],
+.menu-panel [aria-current='page'] {
+    color: var(--accent);
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+}
+.menu-panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-surface);
+    padding: var(--spacing-6);
+    margin-top: var(--spacing-4);
+    max-width: 420px;
+    box-shadow: var(--shadow-overlay);
+}
+.menu-panel ul {
+    padding-left: var(--spacing-5);
+    list-style: disc;
+}
+.site-main {
+    max-width: var(--shell-max);
+    padding: calc(var(--spacing-10) + var(--site-header-height)) var(--spacing-5) var(--spacing-10);
+    margin: auto;
+    min-height: 65vh;
+}
+.status-page {
+    min-height: calc(100vh - var(--site-header-height) - var(--spacing-16));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+.not-found-art {
+    width: min(100%, 303px);
+    height: 46px;
+    margin-bottom: var(--spacing-6);
+    color: var(--accent);
+    background-color: currentColor;
+    mask: url('/images/404-error.svg') center / contain no-repeat;
+    -webkit-mask: url('/images/404-error.svg') center / contain no-repeat;
+}
+
+.page-title,
+.section-title,
+.card-title,
+.menu-title {
+    font-weight: 700;
+}
+.page-title {
+    font-size: var(--text-title);
+    line-height: var(--leading-title);
+    margin: var(--spacing-6) 0 var(--spacing-3);
+}
+.section-title,
+.menu-title {
+    font-size: var(--text-h2);
+    line-height: var(--leading-h2);
+    margin: var(--spacing-10) 0 var(--spacing-4);
+}
+/* Section title left, "see all" link right, on one baseline — loke.dev's
+   "Featured Projects / View all projects →" row. */
+.section-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--spacing-2) var(--spacing-4);
+    margin: var(--spacing-10) 0 var(--spacing-4);
+}
+.section-header .section-title {
+    margin: 0;
+}
+.arrow-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    white-space: nowrap;
+    color: var(--text-secondary);
+    font-size: var(--text-ui);
+    line-height: var(--leading-ui);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color var(--duration) var(--easing);
+}
+.arrow-link:hover,
+.arrow-link:focus-visible {
+    color: var(--accent);
+}
+.arrow-link svg {
+    transition: transform var(--duration) var(--easing);
+}
+.arrow-link:hover svg,
+.arrow-link:focus-visible svg {
+    transform: translateX(2px);
+}
+.card-title {
+    font-size: var(--text-card-title);
+    line-height: var(--leading-card-title);
+    margin: var(--spacing-1) 0 var(--spacing-2);
+}
+/* Breadcrumb — shared by the post detail and category pages. */
+.breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-1);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: var(--text-meta);
+    line-height: var(--leading-meta);
+}
+/* The current page is the only item with weight — position, not decoration. */
+.breadcrumb [aria-current='page'] {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+.breadcrumb-item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-1);
+}
+.breadcrumb a {
+    color: inherit;
+    text-underline-offset: 4px;
+    text-decoration: none;
+    transition: color var(--duration) var(--easing);
+}
+.breadcrumb a:hover,
+.breadcrumb a:focus-visible {
+    color: var(--accent);
+    text-decoration: underline;
+}
+.breadcrumb svg {
+    color: var(--text-tertiary);
+    flex-shrink: 0;
+}
+
+/* Category chips. Not a filter control — each chip is a link to that category. */
+.category-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-2);
+    list-style: none;
+    padding: 0;
+    margin: var(--spacing-4) 0 var(--spacing-8);
+}
+.category-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-1) var(--spacing-3);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-pill);
+    color: var(--text-secondary);
+    font-size: var(--text-ui);
+    line-height: var(--leading-ui);
+    font-weight: 500;
+    text-decoration: none;
+    transition:
+        color var(--duration) var(--easing),
+        background-color var(--duration) var(--easing),
+        border-color var(--duration) var(--easing);
+}
+.category-chip:hover,
+.category-chip:focus-visible {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+/* Current chip carries color, weight and aria-current together — not color alone. */
+.category-chip[aria-current='page'] {
+    background: var(--accent-surface);
+    border-color: var(--accent);
+    color: var(--accent-surface-fg);
+    font-weight: 700;
+}
+.category-chip-count {
+    color: var(--text-tertiary);
+    font-size: var(--text-caption);
+    font-weight: 400;
+    font-variant-numeric: tabular-nums;
+}
+.category-chip[aria-current='page'] .category-chip-count {
+    color: inherit;
+}
+
+.page-intro,
+.card-summary,
+.project-meta,
+.demo-notice,
+.meta {
+    margin: var(--spacing-3) 0;
+}
+.content-section {
+    margin: var(--spacing-10) 0;
+}
+.links,
+.tags {
+    display: flex;
+    gap: var(--spacing-3);
+    flex-wrap: wrap;
+    padding: 0;
+    margin: var(--spacing-3) 0;
+    list-style: none;
+}
+.tags li {
+    background: var(--panel);
+    border-radius: var(--radius-inline);
+    padding: var(--spacing-1) var(--spacing-2);
+    color: var(--text-secondary);
+    font-size: var(--text-caption);
+    line-height: var(--leading-caption);
+}
+.empty {
+    padding: var(--spacing-6);
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--radius-surface);
+}
+
+/* Post cards. Vertical card grid after Sprinters' category page: media on top,
+   then category / title / summary / meta. No author row — this is a single-author
+   blog, so a repeated name on every card is noise; the category takes that slot. */
+.post-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: var(--spacing-8) var(--spacing-6);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.post-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+    min-width: 0;
+    position: relative;
+}
+/* The whole card is clickable, but only the title is the link. Stretching the
+   title's own ::after keeps the accessible name to the title alone — wrapping
+   the card in an <a> would make the link name the entire card text. */
+.post-card .card-title .text-link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-surface);
+}
+/* Hovering anywhere on the card drives the title and the thumbnail together. */
+.post-card:hover .card-title .text-link {
+    color: var(--accent);
+}
+/* Keyboard focus lands on the title link; show it on the card it activates. */
+.post-card:has(.text-link:focus-visible) {
+    outline: var(--focus-width) solid var(--accent);
+    outline-offset: var(--focus-offset);
+    border-radius: var(--radius-surface);
+}
+.post-card .card-title .text-link:focus-visible {
+    outline: none;
+}
+.post-card-media {
+    display: block;
+    overflow: hidden;
+    border-radius: var(--radius-surface);
+    /* A ring instead of a border so the image keeps its full box, as Sprinters does. */
+    box-shadow: 0 0 0 1px var(--line);
+    /* Placeholder for the reserved 16:9 box. aspect-ratio on the image already
+       prevents layout shift; this keeps the space from flashing blank while the
+       thumbnail decodes, and stays visible if it fails to load. */
+    background: var(--panel);
+}
+.thumbnail {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    height: auto;
+    transition: transform 300ms cubic-bezier(0, 0, 0.2, 1);
+}
+.post-card:hover .thumbnail {
+    transform: scale(1.03);
+}
+.post-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+    min-width: 0;
+}
+.post-card-category {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: var(--text-caption);
+    line-height: var(--leading-caption);
+}
+.post-card .card-title {
+    margin: 0;
+}
+.post-card .card-summary {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: var(--text-meta);
+    line-height: var(--leading-meta);
+    /* Only the list truncates. The detail page shows the full summary. */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+}
+.post-card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-2);
+    margin: 0;
+    color: var(--text-tertiary);
+    font-size: var(--text-caption);
+    line-height: var(--leading-caption);
+}
+.post-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-2);
+}
+.post-card-tags span::before {
+    content: '#';
+}
+.project {
+    padding-block: var(--spacing-6);
+    border-bottom: 1px solid var(--line);
+}
+.project .thumbnail {
+    max-width: 480px;
+    background: var(--panel);
+}
+.definition-term {
+    font-weight: 700;
+    margin-top: var(--spacing-3);
+}
+.definition-description {
+    margin-left: 0;
+}
+
+.article {
+    max-width: var(--article-max);
+    margin: auto;
+}
+
+/* Table of contents. Default (narrow and mid widths) is an inline panel in the
+   normal flow; wide screens move it into the right margin — see the min-width
+   rule below. */
+.toc-rail {
+    /* No box of its own until the toc floats; see the container query below. */
+    display: contents;
+}
+.toc {
+    background: var(--panel);
+    border-radius: var(--radius-surface);
+    padding: var(--spacing-4) var(--spacing-6);
+    /* Block spacing, not section spacing: this sits between the post meta and
+       the body, so it takes the 24px step rather than 32px. */
+    margin: var(--spacing-6) 0 var(--spacing-8);
+    /* Navigation aid, not content: one step lighter than the body. */
+    color: var(--text-secondary);
+}
+.toc-title {
+    margin: 0 0 var(--spacing-2);
+    color: var(--text-tertiary);
+    font-size: var(--text-ui);
+    line-height: var(--leading-ui);
+    font-weight: 600;
+}
+.toc-link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+    padding: 2px 0 2px var(--spacing-3);
+    border-left: 2px solid transparent;
+    transition:
+        color var(--duration) var(--easing),
+        border-color var(--duration) var(--easing);
+}
+.toc-link:hover,
+.toc-link:focus-visible {
+    color: var(--text-primary);
+    text-decoration: underline;
+}
+/* Reading position. aria-current="location" is the section being read, which is
+   not the same as a link to the current page. */
+.toc-link[aria-current='location'] {
+    color: var(--accent);
+    border-left-color: var(--accent);
+    font-weight: 600;
+}
+.toc ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-1);
+}
+.toc li {
+    font-size: var(--text-meta);
+    line-height: var(--leading-meta);
+}
+.toc .subheading .toc-link {
+    padding-left: var(--spacing-6);
+}
+
+.prose h2 {
+    font-size: var(--text-h2);
+    line-height: var(--leading-h2);
+    margin: var(--spacing-10) 0 var(--spacing-4);
+}
+.prose h3 {
+    font-size: var(--text-h3);
+    line-height: var(--leading-h3);
+    margin: var(--spacing-6) 0 var(--spacing-3);
+}
+.prose p {
+    margin: var(--spacing-5) 0;
+}
+.prose a {
+    color: var(--accent);
+    text-underline-offset: 4px;
+    transition: color var(--duration) var(--easing);
+}
+.prose a:hover,
+.prose a:focus-visible {
+    color: var(--accent-hover);
+    text-decoration-thickness: 2px;
+}
+.prose strong {
+    font-weight: 700;
+}
+.prose :not(pre) > code {
+    background: var(--panel);
+    border-radius: var(--radius-inline);
+    padding: 2px 4px;
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+}
+.prose ul {
+    list-style: disc;
+    padding-left: var(--spacing-6);
+}
+.prose ol {
+    list-style: decimal;
+    padding-left: var(--spacing-6);
+}
+.prose img {
+    max-width: 100%;
+    height: auto;
+}
+.prose table {
+    display: block;
+    overflow: auto;
+    border-collapse: collapse;
+    margin: var(--spacing-6) 0;
+    max-width: 100%;
+}
+.prose th,
+.prose td {
+    border: 1px solid var(--line);
+    padding: var(--spacing-2);
+}
+/* Thematic break. Tailwind preflight leaves hr's border-color at `inherit`, so
+   without this it takes the body text color — a near-black rule in light mode.
+   Slightly thicker than a hairline so the light divider color still reads. */
+hr {
+    height: 0;
+    border: 0;
+    border-top: 2px solid var(--line);
+}
+.prose hr {
+    margin: var(--spacing-10) 0;
+}
+.prose blockquote {
+    border-left: 3px solid var(--accent);
+    padding-left: var(--spacing-4);
+    color: var(--text-secondary);
+}
+
+.code-block {
+    position: relative;
+    margin: var(--spacing-6) 0;
+    min-width: 0;
+    background: var(--panel);
+}
+.code-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 40px;
+    padding: var(--spacing-2) var(--spacing-3);
+    border-bottom: 1px solid var(--line);
+}
+.code-language {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    padding: 2px var(--spacing-2);
+    border-radius: var(--radius-inline);
+    background: var(--hover-surface);
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    line-height: var(--leading-caption);
+}
+[data-rehype-pretty-code-figure] {
+    margin: var(--spacing-6) 0;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-surface);
+    background: var(--panel);
+}
+[data-rehype-pretty-code-title] {
+    padding: var(--spacing-2) var(--spacing-4);
+    border-bottom: 1px solid var(--line);
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    line-height: var(--leading-meta);
+}
+[data-rehype-pretty-code-figure] .code-block {
+    margin: 0;
+}
+.copy-button {
+    display: block;
+    margin-left: auto;
+    font-size: var(--text-meta);
+    background: transparent;
+    border: 0;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    padding: var(--spacing-1);
+    border-radius: var(--radius-control);
+    transition:
+        color var(--duration) var(--easing),
+        background-color var(--duration) var(--easing);
+}
+.copy-button:hover {
+    color: var(--text-primary);
+    background: var(--hover-surface);
+}
+pre {
+    overflow: auto;
+    padding: var(--spacing-4);
+    max-width: 100%;
+    border-radius: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-code);
+    line-height: var(--leading-code);
+}
+pre code {
+    display: grid;
+}
+/* Shiki emits both themes; pick one per mode. Surface color comes from our
+   tokens, token colors from Shiki. */
+.code-block pre[data-theme] {
+    background: var(--panel) !important;
+    color: var(--text-primary);
+}
+.code-block pre[data-theme] span {
+    color: var(--shiki-light) !important;
+}
+.dark .code-block pre[data-theme] span {
+    color: var(--shiki-dark) !important;
+}
+
+/* Where to go after the article. Same arrow-link pattern as the section
+   headers, so "go to a list" looks the same everywhere on the site. */
+.post-bottom {
+    display: flex;
+    gap: var(--spacing-6);
+    flex-wrap: wrap;
+    margin-top: var(--spacing-12);
+    border-top: 1px solid var(--line);
+    padding-top: var(--spacing-6);
+}
+.post-bottom .arrow-link {
+    padding-block: var(--spacing-2);
+}
+.skip {
+    position: absolute;
+    left: var(--spacing-4);
+    top: -100px;
+    background: var(--surface);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-control);
+    padding: var(--spacing-3);
+    z-index: 30;
+}
+.skip:focus {
+    top: var(--spacing-2);
+}
+
+@media (max-width: 639px) {
+    .primary-nav {
+        display: none;
+    }
+    .header-row {
+        gap: var(--spacing-2);
+    }
+    /* Narrow screens switch to a compact row: a small thumbnail beside the text
+       instead of a full-width one above it. A full-width 16:9 image per card
+       fits only two cards per screen, so the list becomes mostly scrolling. */
+    .post-list {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-6);
+    }
+    .post-card {
+        display: grid;
+        grid-template-columns: 112px minmax(0, 1fr);
+        align-items: start;
+        gap: var(--spacing-3);
+    }
+    .site-main {
+        padding-top: calc(var(--spacing-5) + var(--site-header-height));
+    }
+    .page-title {
+        font-size: var(--text-title-mobile);
+        line-height: var(--leading-title-mobile);
+    }
+    .content-section {
+        margin: var(--spacing-8) 0;
+    }
+}
+/* Wide content columns float the toc in the whitespace to the right of the
+   article. It is positioned outside .article, so the body column keeps its 860px
+   and stays where it was — the toc never takes width from the article.
+   860 article + 2 x (40 gap + 220 toc) = 1380 keeps it clear of the text either side.
+   A container query, not a viewport one, so opening the sidebar pulls the toc
+   back inline on its own. */
+@container shell (min-width: 1380px) {
+    .article {
+        position: relative;
+    }
+    .toc-rail {
+        display: block;
+        position: absolute;
+        /* Line the toc up with the h1, not with the breadcrumb above it:
+           one line of breadcrumb plus the title's top margin. */
+        top: calc(var(--text-meta) * var(--leading-meta) + var(--spacing-6));
+        bottom: 0;
+        left: calc(100% + var(--column-gap));
+        width: var(--toc-width);
+    }
+    .toc-rail .toc {
+        position: sticky;
+        top: calc(var(--site-header-height) + var(--spacing-4));
+        /* Sticky only works while the toc is shorter than the viewport; a long
+           one scrolls inside itself instead of clipping. */
+        max-height: calc(100vh - var(--site-header-height) - var(--spacing-8));
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        /* Plain text in the margin: a filled box out here competes with the body. */
+        background: none;
+        border-radius: 0;
+        padding: 0;
+        margin: 0;
+    }
+}
+
+/* Wide viewports get a wider shell so the article keeps 860 with the toc beside it. */
+@media (min-width: 1280px) {
+    :root {
+        --shell-max: 1200px;
+    }
+}
+
+/* Below this the sidebar stops pushing and floats over the page. */
+@media (max-width: 769px) {
+    .shell[data-sidebar='open'] {
+        --sidebar-offset: 0px;
+    }
+    .sidebar {
+        width: min(var(--sidebar-width), 84vw);
+        box-shadow: var(--shadow-overlay);
+    }
+    .sidebar-scrim {
+        display: block;
+        position: fixed;
+        inset: var(--site-header-height) 0 0 0;
+        z-index: 14;
+        background: rgb(0 0 0 / 0.4);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        scroll-behavior: auto !important;
+        animation: none !important;
+        transition: none !important;
+    }
+}
