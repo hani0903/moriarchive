@@ -1,0 +1,90 @@
+---
+title: '백준 1149 — RGB거리: 마지막 집의 색상별 최솟값'
+slug: 'boj-1149-rgb-street'
+date: '2026-09-06'
+summary: '이전 집과 색이 겹치지 않도록 세 가지 상태의 최소 비용을 누적한다.'
+categoryId: 'algorithm-dp'
+tags: ['문제 풀이', 'DP']
+draft: false
+---
+
+[백준 1149 문제 보기](https://www.acmicpc.net/problem/1149)
+
+## 문제
+
+![백준 1149 RGB거리 문제 화면](/images/posts/dp/boj-1149.png)
+
+## 1. 테이블 정의하기
+
+`D[i][0]` = i번째 집까지 칠할 때 비용의 최솟값, 단 i 번째 집은 빨강(0)
+
+`D[i][1]` = i번째 집까지 칠할 때 비용의 최솟값, 단 i 번째 집은 초록(1)
+
+`D[i][2]` = i번째 집까지 칠할 때 비용의 최솟값, 단 i 번째 집은 파랑(2)
+
+> **집의 각 색상별 최솟값**이 있어야 점화식에 비용의 최솟값을 나타낼 수 있다.
+
+## 2. 점화식 찾기
+
+```text
+D[N][0] =
+ // N번재 집을 r로 칠하는 최솟값은, N-1을 g또는 b로 칠하는 비용 중 더 작은 비용에
+ // N번째 집을 r로 칠하는 비용을 더한 값이다.
+Math.min( D[N-1][1], D[N-1][2] ) + A[N][0]
+```
+
+## 3. 초기값 정의하기
+
+```text
+D[0][0] = houses[0][0]; // 첫 번째 집을 r로 칠할 때의 최솟값
+
+D[0][1] = houses[0][1]; // 첫 번째 집을 g로 칠할 때의 최솟값
+
+D[0][2] = houses[0][2]; // 첫 번째 집을 b로 칠할 때의 최솟값
+```
+
+## 4. 코드 구현하기
+
+```js
+const fs = require('fs');
+const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+
+const [n, ...input] = fs.readFileSync(filePath, 'utf-8').toString().trim().split('\n');
+const N = Number(n);
+const houses = input.map((line) => line.split(' ').map(Number));
+
+function solution() {
+    // 1. 배열 생성
+    const DP = Array.from({ length: N }, () => Array(3).fill(0));
+
+    // 2. 초기값 설정
+    DP[0][0] = houses[0][0];
+    DP[0][1] = houses[0][1];
+    DP[0][2] = houses[0][2];
+
+    // 3. for문 순환
+    for (let i = 1; i < N; i++) {
+        DP[i][0] = houses[i][0] + Math.min(DP[i - 1][1], DP[i - 1][2]);
+        DP[i][1] = houses[i][1] + Math.min(DP[i - 1][0], DP[i - 1][2]);
+        DP[i][2] = houses[i][2] + Math.min(DP[i - 1][0], DP[i - 1][1]);
+    }
+
+    console.log(Math.min(...DP[N - 1]));
+}
+
+solution();
+```
+
+---
+
+## 인덱스와 상태 확인
+
+설명에서는 i번째 집이라고 표현하지만, JavaScript 구현은 0번째 인덱스부터 시작한다. `DP[0]`이 첫 번째 집이고, 답은 `DP[N - 1]`의 세 색상 중 최솟값이다. 각 색상 상태는 직전 집의 **다른 두 색상**에서만 올 수 있다.
+
+## 복잡도
+
+시간 O(N), DP 테이블 공간 O(N). 집마다 세 가지 색상을 계산한다.
+
+## 참고 자료
+
+[바킹독의 실전 알고리즘 0x10강 — 다이나믹 프로그래밍](https://www.youtube.com/watch?v=5leTtB3PQu0)을 학습하며 작성한 메모를 바탕으로 정리했다. 포함된 이미지는 원본 학습 메모의 캡처다.
