@@ -466,6 +466,23 @@ body {
     margin: auto;
     min-height: 65vh;
 }
+.status-page {
+    min-height: calc(100vh - var(--site-header-height) - var(--spacing-16));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+.not-found-art {
+    width: min(100%, 303px);
+    height: 46px;
+    margin-bottom: var(--spacing-6);
+    color: var(--accent);
+    background-color: currentColor;
+    mask: url('/images/404-error.svg') center / contain no-repeat;
+    -webkit-mask: url('/images/404-error.svg') center / contain no-repeat;
+}
 
 .page-title,
 .section-title,
