@@ -107,16 +107,13 @@ export function toSummary(post: PostDetail): PostSummary {
     // 본문을 의도적으로 사용하지 않음을 나타내고 미사용 변수 린트 오류를 피한다.
     void _content;
 
-    // 최상위부터 글이 속한 카테고리 자신까지의 목록
-    const ancestors = categoryIndex.ancestors(post.categoryId);
-
     return {
         ...metadata,
         href: `/blog/${post.slug}`,
-        categoryPath: ancestors.map((c) => ({ name: c.name, href: categoryIndex.href(c.id) })),
+        categoryPath: categoryIndex.path(post.categoryId),
         // 글 → 자신의 카테고리 → 상위 카테고리 → 기본 이미지 순으로 선택한다.
         cover: post.thumbnail ??
-            [...ancestors].reverse().find((c) => c.thumbnail)?.thumbnail ?? {
+            [...categoryIndex.ancestors(post.categoryId)].reverse().find((c) => c.thumbnail)?.thumbnail ?? {
                 src: '/images/default-thumbnail.png',
                 alt: '',
             },

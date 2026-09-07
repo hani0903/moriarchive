@@ -55,6 +55,11 @@ export function createCategoryIndex(input: unknown) {
         byPath.set(path, c);
     }
 
+    const href = (id: string) =>
+        `/blog/category/${ancestors(id)
+            .map((c) => c.slug)
+            .join('/')}`;
+
     // 에러 없이 return 문에 도달하면
     return {
         // order가 같으면 로케일에 의존하지 않는 ID 비교로 정렬한다.
@@ -62,10 +67,9 @@ export function createCategoryIndex(input: unknown) {
         byId,
         byPath,
         ancestors,
-        href: (id: string) =>
-            `/blog/category/${ancestors(id)
-                .map((c) => c.slug)
-                .join('/')}`,
+        href,
+        // 최상위 카테고리부터 현재 카테고리까지의 표시 경로를 만든다.
+        path: (id: string) => ancestors(id).map((c) => ({ name: c.name, href: href(c.id) })),
         includes: (parent: string, child: string) => ancestors(child).some((c) => c.id === parent),
     };
 }
