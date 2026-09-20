@@ -1,0 +1,107 @@
+---
+title: '[React] 가상 돔(Virtual DOM)이란?'
+slug: 'react-virtual-dom'
+date: '2026-09-20'
+summary: 'DOM이 무엇이고 DOM 조작이 왜 비싼지, 리액트가 그 사이에 두는 가상 돔의 정체가 무엇인지 정리한다.'
+categoryId: 'development-react'
+tags: ['React', '개념 정리', 'CS 면접']
+draft: false
+---
+
+## 📖 들어가며
+
+리액트로 화면을 만들 때 우리는 DOM을 직접 조작하지 않는다. 대신 **화면이 어떻게 생겨야 하는지**를 JSX로 적고, 실제 DOM에 반영하는 일은 리액트가 담당한다.
+
+이때 리액트가 효율적으로 UI를 업데이트하기 위해 중간에 들고 있는 것이 바로 **가상 돔(Virtual DOM)** 이다. 오늘은 가상 돔이 무엇이고 실제 DOM과 어떻게 다른지 정리해보겠다!
+
+## DOM이란?
+
+DOM은 **Document Object Model**의 약자로, 웹 문서를 프로그램이 다룰 수 있도록 **문서의 구조·스타일·내용을 객체로 표현한 인터페이스**다. HTML 자체는 텍스트일 뿐이라서, 브라우저는 HTML을 읽어 JavaScript가 접근할 수 있는 객체 구조로 바꾼다.
+
+![document 아래에 html, head(meta, title), body(h1, p, div)가 이어지는 DOM 트리](/images/posts/react/dom-tree.png)
+
+위 그림처럼 DOM은 HTML 요소들을 **트리 형태의 구조**로 표현하며, 이를 **DOM 트리**라고 한다. 트리의 각 항목을 **노드(Node)** 라고 부르고, HTML 요소 하나가 노드 하나에 대응한다.
+
+### DOM 조작 방법
+
+개발자는 **DOM API**를 통해 DOM 트리에 접근하고 원하는 요소를 수정할 수 있다. 이를 **DOM 조작**이라고 한다.
+
+```js
+// 트리를 따라 내려가서 접근
+document.childNodes[1].childNodes[2].childNodes[1].textContent = "제목 변경1";
+
+// 선택자로 바로 접근
+document.querySelector("h1").textContent = "제목 변경2";
+```
+
+- DOM 트리의 최상위 노드인 `document`에서 출발해 원하는 HTML 요소에 접근할 수 있다.
+- `querySelector`처럼 선택자로 찾는 편이 구조 변경에 덜 취약하다.
+
+### DOM 조작은 왜 비쌀까?
+
+DOM이 바뀌면 브라우저는 바뀐 결과를 화면에 반영하기 위해 브라우저 렌더링 과정을 다시 수행한다.
+
+1. **스타일 재계산**: 어떤 CSS 규칙이 적용되는지 다시 계산한다.
+2. **레이아웃(Layout) = 리플로우(Reflow)**: 요소의 크기와 위치를 다시 계산한다. 크기나 위치가 바뀌면 영향받는 요소들, 경우에 따라 문서 전체가 대상이 된다.
+3. **페인트(Paint) = 리페인트(Repaint)**: 계산된 결과를 픽셀로 다시 그린다. 색상처럼 배치에 영향이 없는 변경은 레이아웃 없이 페인트만 다시 한다.
+
+문제는 DOM 조작 한 번이 아니라, **화면을 갱신할 때마다 DOM을 여러 번 조작한다는 것**이다. 목록 항목 10개를 하나씩 `appendChild`로 붙이면 최악의 경우 리플로우가 10번 일어난다. 브라우저의 렌더링 과정 전체는 따로 글을 써서 정리할 예정!
+
+## 가상 돔이란?
+
+리액트 공식 문서는 가상 돔을 다음과 같이 정의한다.
+
+> 가상 돔은 UI의 이상적인, 또는 "가상"의 표현을 메모리에 유지하고, ReactDOM 같은 라이브러리를 통해 "실제" DOM과 동기화하는 프로그래밍 개념이다. 이 동기화 과정을 **재조정(Reconciliation)**이라고 한다.
+
+즉, 가상 돔은 특정 기술이 아니라 **"화면이 어떻게 생겨야 하는지"를 JS 객체로 먼저 그려 두고, 실제 DOM은 그 결과에 맞춰 나중에 맞추는 방식**이다. 리액트는 이 방식을 사용하는 대표적인 라이브러리다.
+
+state가 바뀌면 리액트는 컴포넌트를 다시 호출해 새 가상 돔 트리를 만든다. 그다음 이전 트리와 비교해 달라진 부분만 찾아내고, 그 변경만 실제 DOM에 반영한다. 덕분에 DOM 조작 과정에서 불필요하게 발생하는 리플로우, 리페인트를 줄일 수 있다.
+
+처음엔 재조정이 "변경 사항을 모아 뒀다가 한 번에 DOM에 반영하는 것"인 줄 알았는데, 공식 문서를 다시 보니 그건 배칭이고 재조정은 두 트리를 **비교**하는 과정이었다. 헷갈리기 쉬운 부분이라 따로 적어 둔다.
+
+### 리액트 엘리먼트(React Element)
+
+그럼 가상 돔이라는 게 실제로는 뭘까? JSX는 컴파일 과정에서 `React.createElement()` 호출로 바뀌고, 그 결과는 평범한 JavaScript 객체가 된다.
+
+```jsx
+const element = <h1 className="title">hello</h1>;
+```
+
+위 JSX가 만드는 객체를 단순화하면 다음과 같다.
+
+```js
+{
+  type: "h1",
+  props: { className: "title", children: "hello" },
+}
+```
+
+이 객체를 **리액트 엘리먼트(React Element)**라고 부른다. `type`에는 DOM 태그 이름이나 컴포넌트 함수가 들어가고, `props`에는 속성과 자식이 들어간다.
+
+컴포넌트가 반환한 엘리먼트 안에는 또 다른 엘리먼트가 들어 있다. 그래서 전체는 하나의 트리가 되고, 리액트 공식 문서는 이걸 렌더 트리(Render Tree) 또는 UI 트리라고 부른다. 우리가 흔히 가상 돔이라고 부르는 것이 바로 이 트리다.
+
+### 실제 DOM과 무엇이 다를까?
+
+가장 큰 차이는 **바꿔도 브라우저가 아무 일도 하지 않는다**는 점이다. 실제 DOM 노드는 브라우저가 관리해서 건드리면 리플로우나 리페인트가 따라올 수 있지만, 리액트 엘리먼트는 그냥 JS 메모리 위의 객체라서 만들든 버리든 브라우저는 모른다.
+
+또 하나, 리액트 엘리먼트는 불변(immutable)이다. 실제 DOM처럼 `textContent`를 바꾸는 식으로 수정하지 않고, 새 화면이 필요하면 새 객체를 만든다.
+
+버튼을 클릭할 때마다 숫자가 1씩 올라가는 카운터를 생각해 보자. 리액트는 클릭할 때마다 새 엘리먼트 트리를 통째로 만든다. 객체를 몇 개 만드는 일이라 비용이 거의 들지 않는다. 그리고 이전 트리와 새 트리를 비교해 실제로 달라진 숫자 하나만 DOM에 반영한다. 이 비교 과정이 [재조정(Reconciliation)](/blog/react-reconciliation)이고, DOM에 반영하는 단계가 [커밋](/blog/react-render-and-commit)이다.
+
+정리하면 가상 돔은 결국 **리액트 엘리먼트라는 JS 객체로 이루어진 트리**고, 리액트는 이 트리를 매번 새로 만들어 이전 것과 비교하는 방식으로 실제 DOM 조작을 최소한으로 줄인다.
+
+## 관련 글
+
+- 브라우저 렌더링 파이프라인 — DOM 변경이 화면에 반영되기까지 브라우저가 하는 일 (작성 예정)
+- [렌더 단계와 커밋 단계](/blog/react-render-and-commit) — 이 트리가 언제 만들어지고 언제 DOM에 반영되는지
+- [재조정(Reconciliation)](/blog/react-reconciliation) — 두 트리를 어떤 규칙으로 비교하는지
+
+## 참고 문헌
+
+- [MDN - DOM 소개](https://developer.mozilla.org/ko/docs/Web/API/Document_Object_Model/Introduction)
+- [React 공식(legacy) - Virtual DOM과 Internals](https://ko.legacy.reactjs.org/docs/faq-internals.html)
+- [React 공식 - Render and Commit](https://ko.react.dev/learn/render-and-commit)
+- [React 공식 - State 보존과 초기화](https://ko.react.dev/learn/preserving-and-resetting-state)
+- [yong-nyong - 가상 돔(Virtual DOM)이 무엇이고 왜 중요할까요?](https://yong-nyong.tistory.com/80)
+- [10분 테코톡 🥁 지그의 Virtual DOM](https://www.youtube.com/watch?v=PN_WmsgbQCo)
+- [자바스크립트 DOM 이란?](https://www.youtube.com/watch?v=aTGhKjoZeao)
