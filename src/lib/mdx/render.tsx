@@ -5,6 +5,8 @@ import rehypePrettyCode from 'rehype-pretty-code'; // 코드 블록에 Shiki 기
 import { visit } from 'unist-util-visit'; // Markdown이나 HTML AST를 순회하는 함수
 import { toString } from 'hast-util-to-string'; // AST 노드 안의 텍스트를 추출하는 함수
 import type { Root } from 'hast'; // rehype가 다루는 HTML AST의 최상위 노드 타입
+import { MermaidDiagram } from '@/components/blog/mermaid-diagram';
+import { rehypeMermaid } from '@/lib/mdx/rehype-mermaid';
 import { CopyCodeButton } from '@/components/blog/copy-code-button';
 
 export type HeadingDepth = 2 | 3;
@@ -66,6 +68,8 @@ export async function renderMdx(source: string) {
         components: {
             // MDX가 생성하는 HTML 태그를 대체할 React 컴포넌트
             pre: ({ children, ...props }) => {
+                const source = (props as Record<string, unknown>)['data-mermaid-source'];
+                if (typeof source === 'string') return <MermaidDiagram source={source} />;
                 const language = typeof props['data-language'] === 'string' ? props['data-language'] : 'text';
                 const languageLabel = LANGUAGE_LABELS[language] ?? language.toUpperCase();
 
@@ -89,6 +93,7 @@ export async function renderMdx(source: string) {
                     // collectHeadings는 rehypeSlug가 만든 제목 ID를 사용하므로 이 순서를 유지한다.
                     rehypeSlug,
                     collectHeadings,
+                    rehypeMermaid,
                     [
                         rehypePrettyCode, // 플러그인
                         { theme: { light: 'github-light', dark: 'github-dark' } }, // 플러그인 설정 객체

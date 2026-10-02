@@ -1141,3 +1141,42 @@ pre code {
         transition: none !important;
     }
 }
+
+/* Mermaid uses the same semantic palette as article surfaces. */
+.mermaid-block {
+    min-width: 0;
+    max-width: 100%;
+    margin: var(--spacing-6) 0;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-surface);
+    background: var(--panel);
+    color: var(--text-primary);
+    overflow: hidden;
+}
+.mermaid-viewport {
+    max-width: 100%;
+    overflow-x: auto;
+    padding: var(--spacing-4);
+}
+.mermaid-viewport > svg {
+    display: block;
+    max-width: none;
+    height: auto;
+    margin-inline: auto;
+}
+.mermaid-status {
+    padding: var(--spacing-4);
+    color: var(--text-secondary);
+}
+.mermaid-source {
+    padding: var(--spacing-3) var(--spacing-4);
+    border-top: 1px solid var(--line);
+    color: var(--text-secondary);
+}
+.mermaid-source > summary {
+    cursor: pointer;
+    font-size: var(--text-ui);
+}
+.mermaid-source pre {
+    color: var(--text-primary);
+}
