@@ -31,3 +31,44 @@ memo.set(1, 1);
 | --------- | --------- |
 | 한글      | 표시      |
 | 코드      | 구문 강조 |
+
+## 컴포넌트 계층 — 다이어그램 검수
+
+설명용 예시입니다. Article이 목차와 본문을 렌더링합니다.
+
+```mermaid
+flowchart TD
+    accTitle: 글 상세의 컴포넌트 계층
+    accDescr: Article 아래에 TableOfContents와 ArticleBody가 있고 본문 아래에 CodeBlock이 있습니다.
+    article["Article 글 상세"] --> toc["TableOfContents 목차"]
+    article --> body["ArticleBody 본문"]
+    body --> code["CodeBlock 코드"]
+```
+
+## 요청과 응답 — 다이어그램 검수
+
+OAuth 전체 프로토콜이 아닌, 브라우저와 서버 사이의 세션 확인을 설명하는 예시입니다.
+
+```mermaid
+sequenceDiagram
+    accTitle: 세션 확인 요청과 응답
+    accDescr: 브라우저가 서버에 세션을 요청하고 서버는 세션 유무에 따라 사용자 정보 또는 미인증 응답을 반환합니다.
+    participant B as 브라우저
+    participant S as 애플리케이션 서버
+    B->>S: 세션 확인 요청
+    alt 세션 있음
+        S-->>B: 사용자 정보
+    else 세션 없음
+        S-->>B: 미인증 응답
+    end
+```
+
+## 잘못된 문법 — 오류 격리 검수
+
+이 블록만 실패하고 위의 그림과 아래 문장이 유지되어야 합니다.
+
+```mermaid
+this is intentionally invalid
+```
+
+오류 뒤의 본문도 정상적으로 읽을 수 있습니다.

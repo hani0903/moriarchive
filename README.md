@@ -43,3 +43,27 @@ pnpm post:new imported-post --title "이전 글" --date 2024-03-12 --category al
 파일 읽기 → 스키마 검증 → 공개 정책·분류·정렬 → 화면과 metadata/sitemap으로 연결합니다.
 
 설치한 라이브러리의 버전은 pnpm-lock.yaml에 고정됩니다. 테스트 fixture는 본인 작성 글이 아닌 기능 검증용 데이터입니다.
+
+## 글에 다이어그램 넣기
+
+MDX에서 언어를 `mermaid`로 지정한 코드 블록은 다이어그램으로 표시됩니다.
+컴포넌트 계층·분기는 `flowchart`, OAuth 등 요청·응답 순서는 `sequenceDiagram`을 사용합니다.
+
+````md
+```mermaid
+flowchart TD
+    accTitle: 글 상세 구조
+    accDescr: 글 상세가 목차와 본문을 렌더링합니다.
+    article["글 상세"] --> toc["목차"]
+    article --> body["본문"]
+```
+````
+
+그림 앞뒤에 목적과 핵심 설명을 쓰고, `accTitle`·`accDescr`에 접근성 제목과 설명을 적습니다.
+스타일 지시자나 개별 HEX 대신 사이트 공통 테마를 사용하세요.
+라이트·다크 전환을 따르며 넓은 그림은 블록 안에서 가로 스크롤됩니다.
+원본은 펼쳐 볼 수 있고, JavaScript 없이도 원본을 읽을 수 있습니다.
+문법 오류는 해당 그림에만 안내하며 다른 본문을 유지합니다.
+
+`pnpm dev:demo` 실행 후 `/blog/example-dp`에서 계층도·시퀀스·오류 상태를 함께 확인할 수 있습니다.
+검수용 그림은 테스트 fixture에만 있으며 실제 초안의 공개 상태를 바꾸지 않습니다.
