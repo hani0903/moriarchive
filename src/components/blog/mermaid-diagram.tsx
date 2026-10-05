@@ -40,7 +40,7 @@ export function MermaidDiagram({ source }: { source: string }) {
     }, [source, resolvedTheme, id]);
 
     return (
-        <div className="mermaid-block" ref={host}>
+        <div className="not-prose mermaid-block" ref={host}>
             {current?.svg ? (
                 <div
                     className="mermaid-viewport"

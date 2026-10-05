@@ -1,8 +1,8 @@
 ---
 name: moriarchive
-version: '0.11'
+version: '0.12'
 status: proposed
-updated: '2026-09-07'
+updated: '2026-10-05'
 language: ko
 direction: '숲에 도토리를 모으듯 글을 쌓는 아카이브. 문서의 명료함 + 개인 블로그의 읽기 경험'
   # 값의 출처는 본문 "출처 표기" 규칙을 따른다. [관찰]=추출 JSON 실측, [결정]=우리가 정함, [제안]=첫 시안 기본값, TBD=미정.
@@ -789,6 +789,7 @@ Next는 `tsconfig.json`의 `paths`를 그대로 지원한다 [문서 확인, `01
 
 ## 변경 기록
 
+- **2026-10-05 v0.12** — Markdown 기본 조판을 `@tailwindcss/typography`로 전환했다. `prose-mori`가 플러그인의 색 역할을 기존 semantic token에 연결하며, 본문 폭·한국어 행간·h2/h3 크기·도토리 accent 인용선은 유지한다. Shiki 코드 블록과 Mermaid는 `not-prose`로 격리해 각 컴포넌트가 자체 표면·간격·상호작용을 계속 관리한다.
 - **2026-09-07 v0.11** — `@/`·`@content/` 별칭으로 전면 전환하고 폴더 단위 배럴 4개를 추가(서버/클라이언트 경계 준수). 글 상세 하단 링크를 `.arrow-link`로 통일(`.section-link`에서 개명). 카드 전체를 클릭 가능하게 하고 hover·focus를 카드 단위로 묶었다. 목차의 "바닥에서 마지막 제목 강제" 로직을 읽기 선 스윕으로 교체.
 - **2026-09-07 v0.10.1** — 헤더의 `.header-row > button` 규칙이 특정성으로 `.menu-button`의 `order`를 덮어 메뉴 버튼이 왼쪽으로 가지 않던 문제 수정. 테마 버튼에 `.theme-toggle` 클래스를 주고 요소 선택자를 없앴다.
 - **2026-09-07 v0.10** — 사이드바 링크가 데스크톱에서도 닫히던 문제 수정(오버레이 구간에서만 닫음). 목차에 읽는 위치 표시 추가(`aria-current="location"`, 색·굵기·세로선). 부유 목차의 top을 h1에 정렬. `clean`/`reinstall` 스크립트 추가.
@@ -817,3 +818,13 @@ Mermaid 코드 블록을 본문 다이어그램으로 렌더링한다. 컴포넌
 - 그림을 강제로 축소하지 않는다. 넓은 그림은 키보드로 접근 가능한 블록 내부에서 가로 스크롤하며 페이지 폭을 밀지 않는다.
 - 원본 보기와 표시 실패 안내를 제공한다. 작성자는 그림의 목적·해석을 본문에 적고 `accTitle`·`accDescr`로 제목과 대체 설명을 제공한다.
 - 장식 모션·확대·다운로드 컨트롤은 추가하지 않는다.
+
+## 15. Markdown 조판 소유권 [결정, 2026-10-05]
+
+Markdown이 만드는 일반 HTML의 기본 조판은 `@tailwindcss/typography`가 맡는다. 렌더링 파이프라인과 MDX 컴포넌트는 바꾸지 않는다.
+
+- 글 본문은 `prose prose-mori max-w-none`을 쓴다. `max-w-none`으로 플러그인의 65ch 제한을 제거하고 7절의 860px 본문 폭을 유지한다.
+- `prose-mori`는 `--tw-prose-*`를 `text-primary`, `text-secondary`, `accent`, `line`, `panel` 역할에 연결한다. 기본 gray 테마와 `prose-invert`는 사용하지 않으며, 라이트·다크 전환은 기존 semantic token이 담당한다.
+- 문단·목록·중첩 목록·정의 목록·figure·figcaption의 수직 리듬은 플러그인 기본값을 따른다. 한국어 본문 행간 1.8과 7절의 h2/h3 크기·간격은 로컬 규칙으로 유지한다.
+- 인용문은 자동 인용부호와 이탤릭을 쓰지 않고 `accent` 3px 세로선과 `text-secondary`를 유지한다. 링크, 인라인 코드, 표, 구분선도 7절과 기존 토큰의 역할을 우선한다.
+- Shiki 코드 블록·복사 툴바·Mermaid는 `not-prose`로 격리한다. 플러그인 스타일이 이 컴포넌트의 자체 레이아웃과 테마를 덮지 않는다.

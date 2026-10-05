@@ -77,7 +77,7 @@ export default async function PostPage({ params }: PostPageProps) {
                     <Toc headings={headings} />
                 </div>
             )}
-            <div className="prose">{content}</div>
+            <div className="prose prose-mori max-w-none">{content}</div>
             <nav className="post-bottom" aria-label="다른 글 탐색">
                 <Link className="arrow-link" href={categoryIndex.href(category.id)}>
                     {category.name} 글 더 보기
