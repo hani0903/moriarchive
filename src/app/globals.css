@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@plugin '@tailwindcss/typography';
 @source "../";
 
 /* Design tokens. Values and their roles are documented in the repo root DESIGN.md.
@@ -852,60 +853,80 @@ body {
     padding-left: var(--spacing-6);
 }
 
-.prose h2 {
+/* Typography owns the Markdown element rhythm. This theme keeps its palette tied
+   to moriarchive's semantic roles, so light and dark mode switch without the
+   plugin's default gray or invert palettes. */
+@utility prose-mori {
+    --tw-prose-body: var(--text-primary);
+    --tw-prose-headings: var(--text-primary);
+    --tw-prose-lead: var(--text-secondary);
+    --tw-prose-links: var(--accent);
+    --tw-prose-bold: var(--text-primary);
+    --tw-prose-counters: var(--text-secondary);
+    --tw-prose-bullets: var(--text-tertiary);
+    --tw-prose-hr: var(--line);
+    --tw-prose-quotes: var(--text-secondary);
+    --tw-prose-quote-borders: var(--accent);
+    --tw-prose-captions: var(--text-secondary);
+    --tw-prose-kbd: var(--text-primary);
+    --tw-prose-kbd-shadows: color-mix(in srgb, var(--text-primary) 10%, transparent);
+    --tw-prose-code: var(--text-primary);
+    --tw-prose-pre-code: var(--text-primary);
+    --tw-prose-pre-bg: var(--panel);
+    --tw-prose-th-borders: var(--line);
+    --tw-prose-td-borders: var(--line);
+}
+
+.prose-mori {
+    font-size: var(--text-body);
+    line-height: var(--leading-body);
+}
+.prose-mori h2 {
     font-size: var(--text-h2);
     line-height: var(--leading-h2);
     margin: var(--spacing-10) 0 var(--spacing-4);
 }
-.prose h3 {
+.prose-mori h3 {
     font-size: var(--text-h3);
     line-height: var(--leading-h3);
     margin: var(--spacing-6) 0 var(--spacing-3);
 }
-.prose p {
-    margin: var(--spacing-5) 0;
-}
-.prose a {
+.prose-mori a {
     color: var(--accent);
+    font-weight: inherit;
     text-underline-offset: 4px;
     transition: color var(--duration) var(--easing);
 }
-.prose a:hover,
-.prose a:focus-visible {
+.prose-mori a:hover,
+.prose-mori a:focus-visible {
     color: var(--accent-hover);
     text-decoration-thickness: 2px;
 }
-.prose strong {
+.prose-mori strong {
     font-weight: 700;
 }
-.prose :not(pre) > code {
+.prose-mori :not(pre) > code {
     background: var(--panel);
     border-radius: var(--radius-inline);
+    color: var(--text-primary);
     padding: 2px 4px;
     font-family: var(--font-mono);
     font-size: 0.9em;
+    font-weight: 400;
 }
-.prose ul {
-    list-style: disc;
-    padding-left: var(--spacing-6);
+.prose-mori :not(pre) > code::before,
+.prose-mori :not(pre) > code::after {
+    content: none;
 }
-.prose ol {
-    list-style: decimal;
-    padding-left: var(--spacing-6);
-}
-.prose img {
-    max-width: 100%;
-    height: auto;
-}
-.prose table {
+.prose-mori table {
     display: block;
     overflow: auto;
     border-collapse: collapse;
     margin: var(--spacing-6) 0;
     max-width: 100%;
 }
-.prose th,
-.prose td {
+.prose-mori th,
+.prose-mori td {
     border: 1px solid var(--line);
     padding: var(--spacing-2);
 }
@@ -917,13 +938,19 @@ hr {
     border: 0;
     border-top: 2px solid var(--line);
 }
-.prose hr {
+.prose-mori hr {
     margin: var(--spacing-10) 0;
 }
-.prose blockquote {
+.prose-mori blockquote {
     border-left: 3px solid var(--accent);
     padding-left: var(--spacing-4);
     color: var(--text-secondary);
+    font-style: normal;
+    font-weight: 400;
+}
+.prose-mori blockquote p:first-of-type::before,
+.prose-mori blockquote p:last-of-type::after {
+    content: none;
 }
 
 .code-block {

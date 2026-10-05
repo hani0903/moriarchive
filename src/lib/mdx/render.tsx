@@ -74,7 +74,7 @@ export async function renderMdx(source: string) {
                 const languageLabel = LANGUAGE_LABELS[language] ?? language.toUpperCase();
 
                 return (
-                    <div className="code-block" data-language={language}>
+                    <div className="not-prose code-block" data-language={language}>
                         <div className="code-toolbar">
                             <span className="code-language">{languageLabel}</span>
                             <CopyCodeButton />
