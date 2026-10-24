@@ -1261,8 +1261,8 @@ body {
 }
 
 /* GitHub contribution graph. Week columns x weekday rows. Wide cards stretch
-   the cells to the card width; narrow screens use fixed cells and end-align the
-   block so the oldest weeks are clipped, not the newest. */
+   the cells to the card width; narrow screens use fixed cells and scroll
+   sideways, starting at the newest week (see the 899px block). */
 .github-head {
     display: flex;
     align-items: baseline;
@@ -1283,9 +1283,16 @@ body {
 .github-graph {
     --cell-gap: 4px;
     --columns: repeat(var(--weeks), minmax(0, 1fr));
-    display: flex;
-    justify-content: flex-end;
-    overflow: hidden;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    /* No visible scrollbar (user's call); the left-edge fade below hints at more. */
+    scrollbar-width: none;
+}
+.github-graph::-webkit-scrollbar {
+    display: none;
+}
+.github-graph:focus-visible {
+    border-radius: var(--radius-control);
 }
 .github-graph-inner {
     display: flex;
@@ -1347,16 +1354,19 @@ body {
     width: 12px;
 }
 @media (max-width: 899px) {
+    /* rtl on the scroller makes the initial scroll position the right end (the
+       newest week) without JS; the graph itself flips back to ltr. */
     .github-graph {
         --cell-gap: 3px;
         --columns: repeat(var(--weeks), 11px);
+        direction: rtl;
+        mask-image: linear-gradient(to right, transparent, #000 32px);
     }
     .github-graph-inner {
         width: max-content;
-    }
-    /* The oldest weeks are clipped here, and their month label with them. */
-    .github-months span:first-child {
-        visibility: hidden;
+        direction: ltr;
+        /* Room for the fade, so the oldest week is fully visible once scrolled to. */
+        padding-left: 32px;
     }
 }
 

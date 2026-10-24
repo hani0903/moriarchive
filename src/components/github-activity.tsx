@@ -9,8 +9,9 @@ const toDate = (value: string) => new Date(`${value}T00:00:00Z`);
 /**
  * GitHub 잔디. 서버에서 그리며 클라이언트 JavaScript가 없다.
  * - 칸은 주(열) × 요일(행) 그리드이고 색은 도토리 램프 5단계다(`--heat-0`~`--heat-4`).
- * - 좁은 화면에서는 오래된 주가 왼쪽에서 잘리고 최근 주가 남는다.
- * - 그래프 전체가 `role="img"`이고 요약을 접근성 이름으로 준다. 칸별 수치는 마우스 툴팁(`title`)으로만 보인다 —
+ * - 좁은 화면에서는 가로로 스크롤된다. 처음 위치는 최근 주(오른쪽 끝)이고 왼쪽으로 넘기면 지난 기록이 나온다.
+ *   스크롤 상자는 키보드 초점을 받아 방향키로도 움직인다.
+ * - 그래프는 `role="img"`이고 요약을 접근성 이름으로 준다. 칸별 수치는 마우스 툴팁(`title`)으로만 보인다 —
  *   371칸을 Tab으로 하나씩 지나가게 만들지 않기 위해서다.
  */
 export function GitHubActivity({
@@ -48,11 +49,16 @@ export function GitHubActivity({
             </p>
             <div
                 className="github-graph"
-                role="img"
-                aria-label={`지난 1년 GitHub 기여 ${total.toLocaleString('ko-KR')}회`}
+                tabIndex={0}
+                role="region"
+                aria-label="GitHub 기여 그래프"
                 style={{ '--weeks': weeks.length } as React.CSSProperties}
             >
-                <div className="github-graph-inner">
+                <div
+                    className="github-graph-inner"
+                    role="img"
+                    aria-label={`지난 1년 GitHub 기여 ${total.toLocaleString('ko-KR')}회`}
+                >
                     <div className="github-months" aria-hidden="true">
                         {months.map((m) => (
                             <span key={m.column} style={{ gridColumnStart: m.column + 1 }}>
