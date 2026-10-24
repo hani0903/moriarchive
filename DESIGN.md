@@ -486,6 +486,7 @@ Sprinters의 카테고리 페이지는 depth-1(`기술`) 아래 여러 depth-2 �
 - **헤더 높이는 64px이고 상하 패딩 없이 가운데 정렬한다.** 이전에는 69px 안에 상하 16px 패딩과 44px 버튼을 넣어 내용이 아래로 8px 넘쳤다. 그래서 위 여백이 아래보다 커 보였다.
 - **브랜드는 사용자가 만든 「mori」 워드마크다** [결정, 2026-10-24]. 강아지 m · 도토리 o · 나무 i. 높이 28px이고, 원본의 「archive」는 이 크기에서 5px라 헤더에서는 뺐다. 다크용은 밝기 기준으로 다시 칠했다(몸 `#eab98c`, 귀·도토리 `#c98550`, 눈은 어둡게 유지). `.dark` 클래스로 두 이미지 중 하나만 보인다. 링크 이름은 「mori.archive 홈」이다.
 - **주요 메뉴는 알약 모양이다.** 평소에는 secondary 글자, hover에서 `--hover-surface` 배경이 깔린다. 현재 페이지는 도토리 칩(`accent-surface` 배경 + 굵기 600)으로 표시한다. 밑줄은 쓰지 않는다.
+- **푸터는 짧은 페이지에서도 화면 바닥에 붙는다** [결정, 2026-10-24]. 페이지마다 `min-h-screen`을 주지 않고, `.shell-content`를 `min-height: 100dvh` 세로 flex로 두고 `.site-main`이 남는 높이를 채운다. 페이지별 100vh는 헤더·푸터를 더하면 내용이 없어도 스크롤이 생긴다. 404·오류 화면(`.status-page`)도 뷰포트 계산 대신 main의 남는 높이를 채운다 — 이전 계산식은 160px 스크롤을 만들었다. 이전의 `.site-main { min-height: 65vh }`는 지웠다.
 - **`<aside>`를 쓴다.** 보조 탐색이라는 의미가 마크업에 드러나야 한다.
 - 닫기: 메뉴 버튼, Escape(버튼으로 포커스 복귀), 스크림 클릭.
 - **링크 이동은 오버레이 구간에서만 닫는다** [결정]. 본문을 밀어내는 구간에서는 비켜줄 대상이 없고, 매번 닫히면 분류를 훑어보는 데 쓸 수 없다. 판정은 `matchMedia('(max-width: 769px)')`이며 그 문자열은 `sidebar-store.ts`에 두어 CSS 분기점과 한 곳에서 관리한다.
@@ -496,7 +497,7 @@ Sprinters의 카테고리 페이지는 depth-1(`기술`) 아래 여러 depth-2 �
 
 ## 6-3. 소개 화면 — bento [제안, 2026-10-23]
 
-내용은 Figma 「이력서-작성」 v1 포트폴리오 p-1이고 데이터는 `content/about.ts`, 정리본은 `portfolio-content.md`다. 문서형(라벨 열 + 내용 열) 시안과 비교한 뒤 사용자가 bento를 골랐다.
+내용은 Figma 「이력서-작성」 v1 포트폴리오 p-1이고 데이터는 `content/about.ts`, 정리본은 `.local-docs/portfolio-content.md`(로컬 전용)다. 문서형(라벨 열 + 내용 열) 시안과 비교한 뒤 사용자가 bento를 골랐다.
 
 배치는 whoisvighnesh.in [Vighnesh-Gaddam/Portfolio, MIT]의 카드 그리드를 따른다.
 
@@ -538,7 +539,7 @@ Sprinters의 카테고리 페이지는 depth-1(`기술`) 아래 여러 depth-2 �
 
 - 사례는 포트폴리오 구조를 따른다: `##` 사례 제목 → `<Summary>` 회색 요약 상자 → `###` 증상·원인·대안·해결·결과. `<Summary>`는 `renderMdx`가 제공하는 MDX 컴포넌트다(`.prose .case-summary`).
 - 이미지는 Figma 원본(1170×2532)을 390px webp로 줄였다(장당 10~30KB). 앱 아이콘은 128px.
-- 링크는 Figma 하이퍼링크에서 옮겼다. **Figma 그래빗 카드의 GitHub·Storybook·web 링크는 모여 주소가 그대로 남아 있어** 쓰지 않았다. 그래빗 GitHub는 `portfolio-content.md`의 근거 링크를 쓴다.
+- 링크는 Figma 하이퍼링크에서 옮겼다. **Figma 그래빗 카드의 GitHub·Storybook·web 링크는 모여 주소가 그대로 남아 있어** 쓰지 않았다. 그래빗 GitHub는 `.local-docs/portfolio-content.md`의 근거 링크를 쓴다.
 - 남은 일: 그래빗 Storybook·web 실제 URL, 사례별 이미지(p-12 번들 지도).
 
 ## 7. 글 상세

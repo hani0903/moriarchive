@@ -1,6 +1,6 @@
-// /about 페이지 내용. 원본은 Figma 「이력서-작성」 p-1이며 정리본은 portfolio-content.md에 있다.
+// /about 페이지 내용. 원본은 Figma 「이력서-작성」 p-1이며 정리본은 .local-docs/portfolio-content.md(로컬 전용)에 있다.
 // 프로젝트(p-2 ~ p-12)는 content/projects/*.mdx에 있다.
-// 문구와 숫자를 새로 만들지 않는다. 바꿔야 하면 portfolio-content.md의 근거부터 확인한다.
+// 문구와 숫자를 새로 만들지 않는다. 바꿔야 하면 그 정리본의 근거부터 확인한다.
 // `**굵게**`만 강조로 해석한다.
 
 export const about = {
