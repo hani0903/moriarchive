@@ -1,5 +1,9 @@
 import { compileMDX } from 'next-mdx-remote/rsc'; // MDX 문자열을 받아 React 요소로 컴파일해주는 RSC용 API
 import remarkGfm from 'remark-gfm'; // GitHub Flavored Markdown을 지원하는 remark 플러그인 - 표 / TODO / 취소선과 같은 추가 문법을 제공한다.
+// CommonMark는 닫는 `**` 앞이 문장부호이고 뒤가 글자면 강조로 보지 않는다. `**렌더링(Rendering)**은`처럼
+// 조사가 바로 붙는 한국어에서 `**`가 그대로 남는 원인이다. 이 두 플러그인이 CJK 문자 주변에서 그 규칙을 완화한다.
+import remarkCjkFriendly from 'remark-cjk-friendly';
+import remarkCjkFriendlyGfmStrikethrough from 'remark-cjk-friendly-gfm-strikethrough';
 import rehypeSlug from 'rehype-slug'; // 제목 요소에 URL용 id를 붙이는 플러그인
 import rehypePrettyCode from 'rehype-pretty-code'; // 코드 블록에 Shiki 기반 구문 강조 적용 플러그인
 import { visit } from 'unist-util-visit'; // Markdown이나 HTML AST를 순회하는 함수
@@ -66,7 +70,18 @@ export async function renderMdx(source: string) {
     const result = await compileMDX({
         source, // 컴파일할 MDX 문자열
         components: {
+            // 프로젝트 사례의 회색 요약 상자. Figma 포트폴리오의 사례 구조(제목 → 요약 → 문제 → …)를 따른다.
+            Summary: ({ children }: { children: React.ReactNode }) => (
+                <div className="case-summary">{children}</div>
+            ),
             // MDX가 생성하는 HTML 태그를 대체할 React 컴포넌트
+            // 표는 가로 스크롤 상자로 감싼다. 넘치는 폭은 상자가 받고 페이지는 밀리지 않는다.
+            // 스크롤되는 영역은 키보드로도 움직일 수 있어야 하므로 초점을 받게 한다.
+            table: (props) => (
+                <div className="table-scroll" tabIndex={0} role="region" aria-label="표">
+                    <table {...props} />
+                </div>
+            ),
             pre: ({ children, ...props }) => {
                 const source = (props as Record<string, unknown>)['data-mermaid-source'];
                 if (typeof source === 'string') return <MermaidDiagram source={source} />;
@@ -87,7 +102,9 @@ export async function renderMdx(source: string) {
         options: {
             // Content is authored locally. No remote or user-submitted MDX is executed.
             mdxOptions: {
-                remarkPlugins: [remarkGfm], //Markdown 분석 단계에 사용할 플러그인으로 마크다운을 파싱해 mdast를 생성할 때 사용된다.
+                // Markdown 분석 단계에 사용할 플러그인으로 마크다운을 파싱해 mdast를 생성할 때 사용된다.
+                // 취소선(`~~`)도 GFM 확장이라 CJK 보정을 따로 붙인다.
+                remarkPlugins: [remarkGfm, remarkCjkFriendly, remarkCjkFriendlyGfmStrikethrough],
                 rehypePlugins: [
                     // mdast를 hast로 변환한 뒤에 사용된다.
                     // collectHeadings는 rehypeSlug가 만든 제목 ID를 사용하므로 이 순서를 유지한다.

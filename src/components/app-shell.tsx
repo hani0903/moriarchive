@@ -1,4 +1,5 @@
 'use client';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useRef, useSyncExternalStore } from 'react';
@@ -82,8 +83,25 @@ export function AppShell({
                         >
                             <MenuIcon size={20} />
                         </IconButton>
-                        <Link href="/" className="brand text-link">
-                            mori.archive
+                        {/* The wordmark comes in a light and a dark colouring; CSS shows the one that
+                            matches the theme class, so there is no flash while the theme resolves. */}
+                        <Link href="/" className="brand" aria-label="mori.archive 홈">
+                            <Image
+                                className="brand-logo only-light"
+                                src="/images/brand/mori-light.png"
+                                alt=""
+                                width={94}
+                                height={28}
+                                priority
+                            />
+                            <Image
+                                className="brand-logo only-dark"
+                                src="/images/brand/mori-dark.png"
+                                alt=""
+                                width={94}
+                                height={28}
+                                priority
+                            />
                         </Link>
                     </div>
 
@@ -91,7 +109,7 @@ export function AppShell({
                         <nav aria-label="주요 페이지" className="primary-nav">
                             {links.slice(1).map((link) => (
                                 <Link
-                                    className="nav-link text-link"
+                                    className="nav-link"
                                     key={link.href}
                                     href={link.href}
                                     aria-current={pathname.startsWith(link.href) ? 'page' : undefined}

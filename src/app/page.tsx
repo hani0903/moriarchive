@@ -2,7 +2,7 @@ import { profile } from '@content/site';
 import { getFeaturedProjects, getPostSummaries } from '@/lib/content';
 import { PostList } from '@/components/blog';
 import { SectionHeader } from '@/components/common';
-import { ProjectList } from '@/components/projects';
+import { ProjectGrid } from '@/components/projects';
 import { pageMetadata } from '@/lib/seo/metadata';
 export const metadata = pageMetadata('홈', profile.description, '/');
 
@@ -19,7 +19,7 @@ export default async function Home() {
                     href="/projects"
                     linkLabel="모든 프로젝트 보기"
                 />
-                <ProjectList projects={getFeaturedProjects()} compact />
+                <ProjectGrid projects={await getFeaturedProjects()} />
             </section>
             <section className="content-section" aria-labelledby="posts-title">
                 <SectionHeader id="posts-title" title="최근 글" href="/blog" linkLabel="전체 글 보기" />

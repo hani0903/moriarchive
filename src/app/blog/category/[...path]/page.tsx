@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { categoryIndex, getCategoryPosts } from '@/lib/content';
+import { categoryIndex, getCategoryPosts, getPostSummaries } from '@/lib/content';
 import { CategoryNav, PostList } from '@/components/blog';
 import { Breadcrumb, SectionHeader } from '@/components/common';
 import { notFound } from 'next/navigation';
@@ -48,6 +48,16 @@ export default async function CategoryPage({ params }: Props) {
     const grouped = groups.length > 1;
     const directPosts = posts.filter((p) => p.categoryId === category.id);
 
+    // 비어 있는 분류에서 갈 곳: 글이 있는 형제 분류를 먼저, 없으면 글이 있는 대분류. 최대 3개.
+    const allPosts = posts.length ? [] : await getPostSummaries();
+    const countOf = (id: string) => allPosts.filter((p) => categoryIndex.includes(id, p.categoryId)).length;
+    const nearby = [
+        ...categoryIndex.all.filter((c) => c.parentId === category.parentId && c.id !== category.id),
+        ...categoryIndex.all.filter((c) => !c.parentId && c.id !== category.id),
+    ]
+        .filter((c, i, list) => countOf(c.id) > 0 && list.findIndex((o) => o.id === c.id) === i)
+        .slice(0, 3);
+
     // 전체 카테고리 경로를 표시한다. 마지막 항목은 현재 페이지이므로 링크 대신
     // aria-current를 사용한다. 그렇지 않으면 /algorithm과 /algorithm/dp의
     // 경로가 동일하게 보인다.
@@ -64,7 +74,8 @@ export default async function CategoryPage({ params }: Props) {
         <>
             <Breadcrumb items={trail} />
             <h1 className="page-title">{category.name}</h1>
-            <p className="meta">{posts.length}편</p>
+            {/* 비어 있으면 아래 안내가 같은 말을 한다. */}
+            {posts.length > 0 && <p className="meta">{posts.length}편</p>}
             <CategoryNav items={childNav} ariaLabel="하위 분류" />
             {grouped ? (
                 <>
@@ -86,7 +97,17 @@ export default async function CategoryPage({ params }: Props) {
                     ))}
                 </>
             ) : (
-                <PostList posts={posts} />
+                <PostList
+                    posts={posts}
+                    empty={{
+                        title: '이 분류에는 아직 글이 없습니다',
+                        description: '다른 분류의 글을 먼저 둘러보세요.',
+                        actions: [
+                            { href: '/blog', label: '전체 글 보기' },
+                            ...nearby.map((c) => ({ href: categoryIndex.href(c.id), label: c.name })),
+                        ],
+                    }}
+                />
             )}
         </>
     );

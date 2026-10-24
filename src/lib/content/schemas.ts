@@ -78,15 +78,22 @@ export type PostFrontmatter = z.infer<typeof postSchema>;
 export const projectSchema = z.object({
     id: slugSchema,
     title: z.string().min(1),
+    kind: z.string().min(1), // ex) 모임 조율 서비스
     summary: z.string().min(1),
     role: z.string().min(1),
     period: z.string().min(1),
     collaboration: z.enum(['개인', '팀']),
-    problem: z.string().min(1),
-    contribution: z.string().min(1),
-    outcome: z.string().min(1),
+    outcome: z.string().min(1).optional(), // 출시 결과처럼 아직 없을 수 있다.
+    /** 카드에서 크게 보이는 숫자 하나. 본문 결과 표에 있는 값만 쓴다. */
+    highlight: z.object({ value: z.string().min(1), label: z.string().min(1) }),
+    /** 본문의 `## 제목`과 같아야 한다. 로더가 검사한다. */
+    cases: z.array(z.object({ title: z.string().min(1), result: z.string().min(1).optional() })).min(1),
     technologies: z.array(z.string().min(1)),
-    image: imageSchema.optional(),
+    icon: imageSchema.optional(), // 앱 아이콘
+    /** 서비스 화면. 카드 썸네일은 앞의 3장, 상세는 전부 쓴다. */
+    screens: z
+        .array(imageSchema.extend({ caption: z.string().min(1), description: z.string().min(1) }))
+        .default([]),
     links: z
         .array(z.object({ label: z.string().min(1), href: z.url().refine((s) => /^https?:\/\//.test(s)) }))
         .default([]),

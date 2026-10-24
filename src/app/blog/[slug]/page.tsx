@@ -6,7 +6,8 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import { renderMdx } from '@/lib/mdx/render';
-import { postMetadata } from '@/lib/seo/metadata';
+import { postJsonLd, postMetadata } from '@/lib/seo/metadata';
+import { JsonLd } from '@/components/common/json-ld';
 
 type PostPageProps = { params: Promise<{ slug: string }> };
 
@@ -48,6 +49,7 @@ export default async function PostPage({ params }: PostPageProps) {
 
     return (
         <article className="article">
+            <JsonLd data={postJsonLd(post)} />
             <Breadcrumb items={[{ name: '블로그', href: '/blog' }, ...categoryPath]} />
             <h1 className="page-title">{post.title}</h1>
             <p className="page-intro">{post.summary}</p>
