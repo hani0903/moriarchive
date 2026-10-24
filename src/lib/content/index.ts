@@ -17,5 +17,11 @@ export {
     type PostDetail,
     type PostSummary,
 } from '@/lib/content/posts';
-export { getFeaturedProjects, getProjects } from '@/lib/content/projects';
+export {
+    getFeaturedProjects,
+    getProject,
+    getProjects,
+    loadProjects,
+    type ProjectDetail,
+} from '@/lib/content/projects';
 export { categorySchema, dateSchema, slugSchema, type Category, type Project } from '@/lib/content/schemas';

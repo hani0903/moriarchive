@@ -1,9 +1,22 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { formatDate, type PostSummary } from '@/lib/content/posts';
+import { EmptyState, type EmptyStateProps } from '@/components/common/empty-state';
 
-export function PostList({ posts }: { posts: PostSummary[] }) {
-    if (!posts.length) return <p className="empty">아직 공개된 글이 없습니다.</p>;
+const DEFAULT_EMPTY: EmptyStateProps = {
+    title: '아직 공개한 글이 없습니다',
+    description: '첫 글을 다듬고 있습니다.',
+};
+
+/** `empty`로 페이지마다 다른 안내와 이동 링크를 줄 수 있다. */
+export function PostList({
+    posts,
+    empty = DEFAULT_EMPTY,
+}: {
+    posts: PostSummary[];
+    empty?: EmptyStateProps;
+}) {
+    if (!posts.length) return <EmptyState {...empty} />;
 
     return (
         <div className="post-list">

@@ -4,6 +4,8 @@ import { profile } from '@content/site';
 import { AppShell } from '@/components/app-shell';
 import { ThemeRoot } from '@/components/theme';
 import { getSiteOrigin, isPublicSite } from '@/lib/seo/metadata';
+// Dynamic subset: the browser fetches only the unicode-range files a page uses.
+import 'pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css';
 import './globals.css';
 
 export const metadata: Metadata = {
